@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int tph, howhung, hu[20], cho;
+
+void one();
+void two();
+
+int main() {
+    printf("\nDINING PHILOSOPHER PROBLEM\n");
+
+    printf("Enter the total no. of philosophers: ");
+    scanf("%d", &tph);
+
+    printf("How many are hungry : ");
+    scanf("%d", &howhung);
+
+    if (howhung == tph) {
+        printf("\nAll are hungry..\nDead lock stage will occur\nExiting..\n");
+        return 0;
+    }
+
+    for (int i = 0; i < howhung; i++) {
+        printf("Enter philosopher %d position: ", i + 1);
+        scanf("%d", &hu[i]);
+        hu[i]--;  // convert to zero-index
+    }
+
+    while (1) {
+        printf("\n1.One can eat at a time\t2.Two can eat at a time\t3.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &cho);
+
+        if (cho == 1) one();
+        else if (cho == 2) two();
+        else if (cho == 3) exit(0);
+        else printf("Invalid option..\n");
+    }
+}
+
+void one() {
+    printf("\nAllow one philosopher to eat at any time\n");
+
+    for (int i = 0; i < howhung; i++) {
+        printf("P %d is granted to eat\n", hu[i] + 1);
+
+        for (int j = 0; j < howhung; j++)
+            if (j != i)
+                printf("P %d is waiting\n", hu[j] + 1);
+    }
+}
+
+void two() {
+    int s = 0;
+
+    printf("\nAllow two philosophers to eat at same time\n");
+
+    for (int i = 0; i < howhung; i++) {
+        for (int j = i + 1; j < howhung; j++) {
+
+            if (abs(hu[i] - hu[j]) >= 1 && abs(hu[i] - hu[j]) != tph - 1) {
+
+                printf("\ncombination %d\n", ++s);
+                printf("P %d and P %d are granted to eat\n", hu[i] + 1, hu[j] + 1);
+
+                for (int x = 0; x < howhung; x++)
+                    if (hu[x] != hu[i] && hu[x] != hu[j])
+                        printf("P %d is waiting\n", hu[x] + 1);
+            }
+        }
+    }
+}
